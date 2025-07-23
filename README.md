@@ -1,6 +1,9 @@
 # YOLO-SimSiam
 ## A self-supervised learning-based method for tunnel leakage defect few-shot recognition and visual explanation
 
+![workflow](https://github.com/user-attachments/assets/986b768e-2183-4a83-8b87-5417137f3207)
+
+
 
 ### 1. Installation
 参考ultralytics, Grad-CAM等 (https://github.com/ultralytics/ultralytics) (https://github.com/jacobgil/pytorch-grad-cam) 安装所需的各类第三方库
