@@ -5,9 +5,5 @@ val: val/images # val images (relative to 'path')
 
 # Classes
 names:
-#  0: crack
-#  1: leakage
-#  2: spall
-
-
   0: leakage
+
