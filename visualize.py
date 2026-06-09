@@ -1,12 +1,12 @@
-
+"""
+用于图像、特征图可视化
+"""
 import cv2
 from collections import OrderedDict
 from PIL import Image
 from pathlib import Path
 import matplotlib.pyplot as plt
-from matplotlib.colors import LinearSegmentedColormap
 import numpy as np
-import pandas as pd
 
 import torch
 import torch.nn as nn
@@ -14,12 +14,11 @@ from torch.utils.data import DataLoader
 from torchvision.transforms import transforms
 from torchvision.models._utils import IntermediateLayerGetter
 
-
 from ultralytics.utils.plotting import plt_settings
-from ultralytics.nn.tasks import attempt_load_one_weight
+from ultralytics.nn.tasks import load_checkpoint
 from ultralytics.models.yolo.segment import SegmentationTrainer
 
-from SSL_main import YOLOSimSiam, ContrastiveDataset
+from main_SSL import YOLOSimSiam, ContrastiveDataset
 
 from pytorch_grad_cam import GradCAM, EigenCAM
 from pytorch_grad_cam.utils.image import show_cam_on_image
@@ -29,7 +28,7 @@ from pytorch_grad_cam.utils.image import show_cam_on_image
 def plot_contra_images(root, save_path="runs/contra", bs=4):
     """display one batch images and their 2 views"""
     dataset = ContrastiveDataset(root)
-    loader = DataLoader(dataset, bs, collate_fn=dataset.collate_fn)
+    loader = DataLoader(dataset, bs)
     fig, axs = plt.subplots(bs, 3, figsize=(8, 6), tight_layout=True)
     for batch in loader:
         for i in range(bs):
@@ -75,7 +74,7 @@ class ILGetConcat(IntermediateLayerGetter):
 def visualize_feature_map(checkpoint, image_path, n=4, layer="6", task="contra", save=False):
     """针对YOLO模型可视化其中间特征图"""
     # 加载带参数的模型
-    yolo_model, _ = attempt_load_one_weight(checkpoint)
+    yolo_model, _ = load_checkpoint(checkpoint)
     model = yolo_model.model.cuda()  # 到这一层才能显示children
     # 输出中间特征图
     new_model = ILGetConcat(model, {layer: "feat1"})
@@ -92,7 +91,7 @@ def visualize_feature_map(checkpoint, image_path, n=4, layer="6", task="contra",
     fig, axs = plt.subplots(n, n)
     axs = axs.ravel()  # 从二维（4，8）矩阵形式拉直变为一维32，便于索引
     for i in range(n*n):
-        img = axs[i].imshow(out[..., i*n], cmap='viridis', vmin=vmin, vmax=vmax)
+        img = axs[i].imshow(out[..., i], cmap='viridis', vmin=vmin, vmax=vmax)
         axs[i].axis("off")
 
     fig.colorbar(img, ax=axs)
@@ -138,7 +137,7 @@ def get_image(image_path, size=(512, 512), mode="L"):
 
 def visualize_contra_map(checkpoint, image_path, target_path, save=False):
     assert torch.cuda.is_available(), "SSL should be implement on GPU"
-    yolo_model, _ = attempt_load_one_weight(checkpoint)
+    yolo_model, _ = load_checkpoint(checkpoint)
     model = YOLOSimSiamFeatureExtractor(yolo_model).cuda()
     # print(model)
 
@@ -170,12 +169,12 @@ class YOLOSegExtractor(nn.Module):
         self.model = model
 
     def __call__(self, x):
-        return self.model(x)[0]
+        return self.model(x)[0][0]
 
 
 def visualize_seg_map(checkpoint, image_path, save=False):
     assert torch.cuda.is_available(), "SSL should be implement on GPU"
-    yolo_model, _ = attempt_load_one_weight(checkpoint)
+    yolo_model, _ = load_checkpoint(checkpoint)
     model = YOLOSegExtractor(yolo_model).cuda()
 
     image, image_float, image_tensor = get_image(image_path, (640, 640), mode="RGB")
@@ -193,3 +192,10 @@ def visualize_seg_map(checkpoint, image_path, save=False):
     if save:
         plt.savefig(f"{Path(image_path).stem}.png", dpi=200, bbox_inches="tight")
     plt.show()
+
+
+if __name__ == "__main__":
+
+    plot_contra_images("leakage")
+
+
