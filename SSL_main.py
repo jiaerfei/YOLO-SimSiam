@@ -366,11 +366,11 @@ def knn_classifier(train_loader, val_loader, model, k=1):
 
 parser = argparse.ArgumentParser("contrastive training only for GPUs")
 # data
-parser.add_argument("--data", default="/home/featurize/Leakage_images")
-parser.add_argument("--knn_train", default="/home/featurize/Leakage_KNN/train")
-parser.add_argument("--knn_val", default="/home/featurize/Leakage_KNN/val")
+parser.add_argument("--data", default=" ")
+parser.add_argument("--knn_train", default=" ")
+parser.add_argument("--knn_val", default=" ")
 # model
-parser.add_argument("--model", default="/home/featurize/work/YOLO_model/cfg/yolo11s.yaml")
+parser.add_argument("--model", default=" ")
 # train
 parser.add_argument("--epochs", default=200)
 parser.add_argument("--workers", default=8)
@@ -382,8 +382,8 @@ parser.add_argument("--lrf", default=0.01, type=float, help="lr decay factor")
 # log
 parser.add_argument("--exist-ok", default=False, type=bool,
                     help="whether to overwrite existing experiment")
-parser.add_argument("--project", default="knn_contra", type=str, help="name of save dir")
-parser.add_argument("--name", default="0.01_adam_cos", type=str,
+parser.add_argument("--project", default=" ", type=str, help="name of save dir")
+parser.add_argument("--name", default=" ", type=str,
                     help="subdirectory within project folder, logs and outputs are stored.")
 
 
