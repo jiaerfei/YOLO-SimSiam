@@ -5,11 +5,11 @@
 
 
 
-### 1. Installation
+### 1. 环境配置
 参考ultralytics, Grad-CAM等 (https://github.com/ultralytics/ultralytics) (https://github.com/jacobgil/pytorch-grad-cam) 安装所需的各类第三方库
 
 
-### 2. 代码说明
+### 2. 文件说明
 
 #### SSL_main.py
 用于实现图像的特征学习
@@ -23,8 +23,9 @@
 #### utils.py
 用于数据预处理，标签格式转换等
 
-其他为模型、数据集等配置文件
+其他为模型、数据集、模型最优权重等配置文件
 
 
 ### 3. 数据集下载
-其中包含了自监督、正常训练、kNN各任务数据集 (https://pan.baidu.com/s/1yahRkw1d4MVjj7Un4g_w_w)
+Leakage.zip
+链接: https://pan.baidu.com/s/1SeBuYLQCoXsSWbdvB8urmA?pwd=2025
